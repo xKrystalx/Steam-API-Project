@@ -1,0 +1,136 @@
+<body>
+    {{>search_account}}
+    {{>suggested_content}}
+</body>
+
+<template name = "search_account">
+    <div class = "flex search-bar full-width">
+        <div class = "input-group mb-3">
+            <input type = "text" class = "form-control input" name = "steam_url" placeholder="Paste your profile url here...">
+            <button type = "button" class = "btn btn-secondary search_account_btn" name = "steam_url_submit">Let the magic happen</button>
+        </div>
+    </div>
+</template>
+
+<template name = "suggested_content">
+
+    {{#if state.isProcessing}}
+    <div class = "suggested-content flex flex-center full-height">
+    <div class = "flex-center full-height full-width flex">
+        <div class = "loader"></div>
+    </div>
+    </div>
+    {{else}}
+        {{#if state.resultsReady}}
+        <div class = "suggested-content flex flex-center">
+        <div class = "full-width">
+            <div class = "flex flex-center full-width suggested-game">
+                <div class = "game-info-container flex flex-center text">
+                    <div id = "main-thumbnail">
+                        <img src = {{suggestion.data.details.header_image}}>
+                    </div>
+                    <div id = "main-info">
+                        <div class = "btn-group" role = "group">
+                            <a href = "steam://install/{{suggestion.data.appid}}" class = "btn btn-success">Install</a>
+                            <a href = "https://store.steampowered.com/app/{{suggestion.data.appid}}" class = "btn btn-secondary">Store Page</a>
+                        </div>
+                        <div id = "main-description">
+                            {{suggestion.data.details.short_description}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "panel flex flex-center">
+                <div class = "screenshots-panel">
+                    <div id="screenshot-carousel" class="carousel slide" data-bs-ride="carousel">
+                        <ol class="carousel-indicators">
+                        {{#each screenshot in suggestion.data.details.screenshots}}
+                            {{#if compare screenshot.id '==' 0}}
+                                <li data-bs-target="#screenshot-carousel" data-bs-slide-to={{screenshot.id}} class="active"></li>
+                            {{else}}
+                                <li data-bs-target="#screenshot-carousel" data-bs-slide-to={{screenshot.id}}></li>
+                            {{/if}}
+                        {{/each}}
+                        </ol>
+                        <div class="carousel-inner">
+                        {{#each screenshot in suggestion.data.details.screenshots}}
+                            {{#if compare screenshot.id '==' 0}}
+                                <div class="carousel-item active">
+                                    <img src={{screenshot.path_thumbnail}} class="d-block w-100" alt="...">
+                                </div>
+                            {{else}}
+                                <div class="carousel-item">
+                                    <img src="{{screenshot.path_thumbnail}}" class="d-block w-100" alt="...">
+                                </div>
+                            {{/if}}
+                        {{/each}}
+                        </div>
+                        <a class="carousel-control-prev" href="#screenshot-carousel" role="button" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                          </a>
+                          <a class="carousel-control-next" href="#screenshot-carousel" role="button" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                          </a>
+                    </div>
+                </div>
+            </div>
+            <div class = "full-width panel">
+                {{#if compare suggestion.data.reviews.summary.review_score '>' 5}}
+                    <div class = "flex text box-shadow-large overall-score">
+                        <span>All reviews:&nbsp;</span>
+                        <span class = "good">{{suggestion.data.reviews.summary.review_score_desc}}</span>
+                        <span>&nbsp;({{suggestion.data.reviews.summary.total_reviews}})</span>
+                    </div>
+                {{else}}
+                    {{#if compare suggestion.data.reviews.summary.review_score '>' 5}}
+                        <div class = "flex text box-shadow-large overall-score">
+                            <span>All reviews:&nbsp;</span>
+                            <span class = "mixed">{{suggestion.data.reviews.summary.review_score_desc}}</span>
+                            <span>&nbsp;({{suggestion.data.reviews.summary.total_reviews}})</span>
+                        </div>
+                    {{else}}
+                        <div class = "flex text box-shadow-large overall-score">
+                            <span>All reviews:&nbsp;</span>
+                            <span class = "bad">{{suggestion.data.reviews.summary.review_score_desc}}</span>
+                            <span>&nbsp;({{suggestion.data.reviews.summary.total_reviews}})</span>
+                        </div>
+                    {{/if}}
+                {{/if}}
+                <div class = "flex flex-center full-width">
+                    <div class = "reviews text flex .flex-justify-center full-width">
+                        <div class = "reviews-positive flex-even">
+                            <h1 class = "good">Positive Reviews:</h1>
+                            {{#each review in suggestion.data.reviews.positive}}
+                            <div class = "review-positive review">
+                                <pre>
+                                    {{{processBBCode review.review}}}
+                                </pre>
+                            </div>
+                            <hr class = "horizontal-divider">
+                            {{/each}}
+                        </div>
+                        <hr class = "vertical-divider">
+                        <div class = "reviews-negative flex-even">
+                            <h1 class = "bad">Negative Reviews:</h1>
+                            {{#each review in suggestion.data.reviews.negative}}
+                            <div class = "review-negative review">
+                                <pre>
+                                    {{{processBBCode review.review}}}
+                                </pre>
+                            </div>
+                            <hr class = "horizontal-divider">
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        {{else}}
+            <div class = "suggested-content flex flex-center full-height">
+            </div>
+        {{/if}}
+    {{/if}}
+</template>
