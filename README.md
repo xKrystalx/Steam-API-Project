@@ -1,5 +1,5 @@
 # Steam-API-Project
-[Old] Recommend a random game from user's library. Part of a small university task.
+[Old] Recommend a random game from user's library. Part of a small university task. Built with Meteor.js
 
 ##Features
 - Game overview
