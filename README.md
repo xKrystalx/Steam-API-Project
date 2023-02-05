@@ -3,6 +3,7 @@
 
 ##Features
 - Game overview
+- Game screenshots
 - Install/Store Page links
 - Few reviews against and for the game
 
